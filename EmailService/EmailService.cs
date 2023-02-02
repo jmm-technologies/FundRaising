@@ -17,20 +17,29 @@ public class EmailService : BackgroundService
     public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
     {
         this.logger = logger;
-        configuration.GetSection(ServiceOptions.Identifier).Bind(_options);
+        _options.SendGridApiKey = configuration.GetValue<string>(nameof(ServiceOptions.SendGridApiKey));
+        _options.RabitMQHostName = configuration.GetValue<string>(nameof(ServiceOptions.RabitMQHostName));
+        _options.RabitMQUserName = configuration.GetValue<string>(nameof(ServiceOptions.RabitMQUserName));
+        _options.RabitMQPassword = configuration.GetValue<string>(nameof(ServiceOptions.RabitMQPassword));
+        _options.RabitMQPort = configuration.GetValue<int>(nameof(ServiceOptions.RabitMQPort));
+        _options.RabitMQQueueName = configuration.GetValue<string>(nameof(ServiceOptions.RabitMQQueueName));
+        _options.SendGridFromEmail = configuration.GetValue<string>(nameof(ServiceOptions.SendGridFromEmail));
+        _options.FromName = configuration.GetValue<string>(nameof(ServiceOptions.FromName));
+
         var factory = new ConnectionFactory()
         {
-            HostName = _options.RabitMQOption.HostName,
-            UserName = _options.RabitMQOption.UserName,
-            Password = _options.RabitMQOption.Password,
-            Port = _options.RabitMQOption.Port,
+            HostName = _options.RabitMQHostName,
+            UserName = _options.RabitMQUserName,
+            Password = _options.RabitMQPassword,
+            Port = _options.RabitMQPort,
         };
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
 
-        _channel.QueueDeclare(queue: _options.RabitMQOption.QueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+        //var env = Environment.GetEnvironmentVariable("SERVICE_OPTIONS");
+        _channel.QueueDeclare(queue: _options.RabitMQQueueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
 
-        _sendGridClient = new SendGridClient(_options.SendGridOption.ApiKey);
+        _sendGridClient = new SendGridClient(_options.SendGridApiKey);
     }
 
     protected async override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -42,7 +51,7 @@ public class EmailService : BackgroundService
         });
         while (!stoppingToken.IsCancellationRequested)
         {
-           // logger.LogInformation($"{nameof(EmailService)} is working in background");
+            // logger.LogInformation($"{nameof(EmailService)} is working in background");
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += async (model, ea) =>
             {
@@ -52,7 +61,7 @@ public class EmailService : BackgroundService
                 await SendEmail(message);
                 _channel.BasicAck(ea.DeliveryTag, false);
             };
-            _channel.BasicConsume(queue: _options.RabitMQOption.QueueName, autoAck: false, consumer: consumer);
+            _channel.BasicConsume(queue: _options.RabitMQQueueName, autoAck: false, consumer: consumer);
 
             await Task.Delay(10000, stoppingToken);
         }
@@ -65,7 +74,7 @@ public class EmailService : BackgroundService
         var emailData = JsonConvert.DeserializeObject<EmailData>(message);
         Console.WriteLine("Sending email to: {0} with message: {1}", emailData.email, emailData.message);
 
-        var from = new EmailAddress(_options.SendGridOption.FromEmail, _options.SendGridOption.FromName);
+        var from = new EmailAddress(_options.SendGridFromEmail, _options.FromName);
         var to = new EmailAddress(emailData.email, emailData.name);
         var subject = "Email from Email Service";
         var plainTextContent = emailData.message;

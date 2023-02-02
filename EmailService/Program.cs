@@ -2,7 +2,11 @@
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-IConfigurationBuilder config = new ConfigurationBuilder();
+IConfigurationBuilder config = new ConfigurationBuilder()
+        .SetBasePath(builder.Environment.ContentRootPath)
+        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+        .AddEnvironmentVariables(); ;
             
 IConfiguration configuration = config.Build();
 
