@@ -12,12 +12,13 @@ import { ForgotModule } from './forgot/forgot.module';
 import { DataSource } from 'typeorm';
 import { EventModule } from './events/event.module';
 import { FilesModule } from './files/files.module';
+import aliosConfig from './config/alios.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, authConfig, appConfig, mailConfig],
+      load: [databaseConfig, authConfig, appConfig, mailConfig, aliosConfig],
       envFilePath: ['.env'],
     }),
     TypeOrmModule.forRootAsync({
