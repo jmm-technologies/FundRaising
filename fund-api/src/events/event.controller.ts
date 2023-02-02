@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, SerializeOptions, UploadedFile, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { Roles } from "src/roles/roles.decorator";
 import { RoleEnum } from "src/roles/roles.enum";
 import { RolesGuard } from "src/roles/roles.guard";
@@ -10,6 +10,9 @@ import { AliOssService } from "nestjs-ali-oss";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { FileEntity } from "src/files/entities/file.entity";
+import { UseInterceptors } from "@nestjs/common/decorators";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { UpdateEventDto } from "./dto/update.event.dto";
 
 
 @ApiTags('Event')
@@ -35,23 +38,42 @@ export class EventController {
     })
     @Post()
     @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string'
+                },
+                description: {
+                    type: 'string'
+                },
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @UseInterceptors(FileInterceptor('file'))
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createEvent: CreateEventDto, @UploadedFile() file: Express.Multer.File) {
         const { originalname, buffer } = file;
         const fileName = `${Date.now()}-${originalname}`;
         const result = await this.aliOssService.put(fileName, buffer);
         // save file to database
-       const image = await this.FileRespository.save(
+        const image = await this.FileRespository.save(
             this.FileRespository.create({
                 ...file,
                 path: result.url,
             }),
         );
         console.log(image);
-        return await this.EventService.create(createEvent);
-
+        return await this.EventService.create({
+            ...createEvent,
+            photoId: image.id,
+        });
     }
-
 
 
     @Get()
@@ -60,7 +82,7 @@ export class EventController {
         return await this.EventService.findAll();
     }
 
- 
+
     @Get(':id')
     @HttpCode(HttpStatus.OK)
     async findOne(@Param('id') id: string) {
@@ -74,9 +96,41 @@ export class EventController {
         groups: ['admin'],
     })
     @Patch(':id')
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                name: {
+                    type: 'string'
+                },
+                description: {
+                    type: 'string'
+                },
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @UseInterceptors(FileInterceptor('file'))
     @HttpCode(HttpStatus.OK)
-    async update(@Param('id') id: string, @Body() Event: CreateEventDto) {
-        return await this.EventService.update(id, Event);
+    async update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto, @UploadedFile() file: Express.Multer.File) {
+        const { originalname, buffer } = file;
+        const fileName = `${Date.now()}-${originalname}`;
+        const result = await this.aliOssService.put(fileName, buffer);
+        // save file to database
+        const image = await this.FileRespository.save(
+            this.FileRespository.create({
+                ...file,
+                path: result.url,
+            }),
+        );
+        return await this.EventService.update(id, {
+            ...updateEventDto,
+            photoId: image.id,
+        });
     }
 
     @ApiBearerAuth()

@@ -13,7 +13,6 @@ import { RoleEnum } from 'src/roles/roles.enum';
 import { StatusEnum } from 'src/statuses/statuses.enum';
 import { Role } from 'src/roles/entities/role.entity';
 import { Status } from 'src/statuses/entities/status.entity';
-import { MailService } from 'src/mail/mail.service';
 
 
 @Injectable()
@@ -21,7 +20,6 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private mailService: MailService,
   ) { }
 
   async create(createProfileDto: CreateUserDto) {
@@ -43,15 +41,6 @@ export class UsersService {
         hash,
       }),
     );
-
-   await this.mailService.userSignUp({
-      to: createProfileDto.email,
-      data: {
-        eamil: createProfileDto.email,
-        password: password
-      },
-    });
-
     return {
       success : true,
       message : 'User created successfully',

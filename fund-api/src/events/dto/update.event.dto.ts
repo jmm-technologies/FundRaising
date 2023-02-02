@@ -7,16 +7,16 @@ import { IsExist } from 'src/utils/validators/is-exists.validator';
 export class UpdateEventDto extends PartialType(CreateEventDto) {
   @ApiProperty({ example: 'demo event' })
   @IsNotEmpty()
-  name?: string | null;
+  name: string | null;
 
   @ApiProperty({ example: 'demo event description' })
   @IsNotEmpty()
-  description?: string | null;
+  description: string | null;
 
   @ApiProperty({ type: () => FileEntity })
   @IsOptional()
   @Validate(IsExist, ['FileEntity', 'id'], {
     message: 'imageNotExists',
   })
-  photo?: FileEntity | null;
+  photoId?: string | null;
 }

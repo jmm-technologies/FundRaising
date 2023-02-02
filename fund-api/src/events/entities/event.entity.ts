@@ -1,6 +1,7 @@
 import { IsNotEmpty } from "class-validator";
+import { FileEntity } from "src/files/entities/file.entity";
 import { EntityHelper } from "src/utils/entity-helper";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 // import { FileEntity } from "src/files/entities/file.entity";
 
 @Entity()
@@ -16,9 +17,10 @@ export class Event  extends EntityHelper {
   @IsNotEmpty()
   description: string | null;
 
-  @ManyToOne(() => Event, (event) => event.id)
-  @JoinColumn({ name: 'photo_id' })
-  parent: Event | null;
+  @ManyToOne(() => FileEntity, {
+    eager: true,
+  })
+  photoId?: string | null;
 
 
   @CreateDateColumn()

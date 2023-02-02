@@ -8,7 +8,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AnonymousStrategy } from './strategies/anonymous.strategy';
 import { UsersModule } from 'src/users/users.module';
 import { ForgotModule } from 'src/forgot/forgot.module';
-import { MailModule } from 'src/mail/mail.module';
 import { IsExist } from 'src/utils/validators/is-exists.validator';
 import { IsNotExist } from 'src/utils/validators/is-not-exists.validator';
 import { EventModule } from 'src/events/event.module';
@@ -19,7 +18,6 @@ import { FilesModule } from 'src/files/files.module';
     UsersModule,
     ForgotModule,
     PassportModule,
-    MailModule,
     EventModule,
     FilesModule,
     JwtModule.registerAsync({

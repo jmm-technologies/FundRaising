@@ -9,14 +9,10 @@ import { RoleEnum } from 'src/roles/roles.enum';
 import { StatusEnum } from 'src/statuses/statuses.enum';
 import * as crypto from 'crypto';
 import { Status } from 'src/statuses/entities/status.entity';
-// import { Role } from 'src/roles/entities/role.entity';
 import { AuthProvidersEnum } from './auth-providers.enum';
 import { UsersService } from 'src/users/users.service';
 import { ForgotService } from 'src/forgot/forgot.service';
-import { MailService } from 'src/mail/mail.service';
 import { plainToClass } from 'class-transformer';
-// import { GenerateRandomPassword } from 'src/utils/generaterandom/generateRandomPass';
-// import { GenerateRandomPassword } from 'src/utils/generaterandom/generateRandomPass';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +20,6 @@ export class AuthService {
     private jwtService: JwtService,
     private usersService: UsersService,
     private forgotService: ForgotService,
-    private mailService: MailService,
 
   ) { }
 
@@ -91,35 +86,6 @@ export class AuthService {
     }
   }
 
-  // async register(dto: AuthRegisterLoginDto): Promise<void> {
-  //   const hash = crypto
-  //     .createHash('sha256')
-  //     .update(randomStringGenerator())
-  //     .digest('hex');
-  //   const password = new GenerateRandomPassword().toString();
-  //   console.log('password', password)
-
-  //   const user = await this.usersService.create({
-  //     ...dto,
-  //     email: dto.email,
-  //     password: password,
-  //     role: {
-  //       id: RoleEnum.user,
-  //     } as Role,
-  //     status: {
-  //       id: StatusEnum.inactive,
-  //     } as Status,
-  //     hash,
-  //   });
-
-  //   await this.mailService.userSignUp({
-  //     to: user.email,
-  //     data: {
-  //       hash,
-  //       // password,
-  //     },
-  //   });
-  // }
 
   async confirmEmail(hash: string): Promise<void> {
     const user = await this.usersService.findOne({
@@ -166,13 +132,6 @@ export class AuthService {
       await this.forgotService.create({
         hash,
         user,
-      });
-
-      await this.mailService.forgotPassword({
-        to: email,
-        data: {
-          hash,
-        },
       });
     }
   }

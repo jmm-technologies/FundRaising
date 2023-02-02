@@ -18,5 +18,5 @@ export class CreateEventDto {
     @Validate(IsExist, ['FileEntity', 'id'], {
       message: 'imageNotExists',
     })
-    photo?: FileEntity | null;
+    photoId?: string | null;
 }

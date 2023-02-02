@@ -1,8 +1,6 @@
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AliOssModule } from 'nestjs-ali-oss';
-// import { AliOssService } from 'nestjs-ali-oss';
-// import { FilesService } from './files.service';
-import { FilesController } from './files.controller';
+import { ConfigModule } from '@nestjs/config';
+// import { AliOssModule } from 'nestjs-ali-oss';
+// import { FilesController } from './files.controller';
 import { Module } from '@nestjs/common';
 import { FileEntity } from './entities/file.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,22 +8,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [
     TypeOrmModule.forFeature([FileEntity]),
     ConfigModule.forRoot(),
-    AliOssModule.registerAsync({
-      imports: [ConfigModule],
-      // useFactory: (configService: ConfigService) => ({
-      useFactory: () => ({
-      
-        region: configService.get('end.point'),
-        accessKeyId: configService.get('access.key'),
-        accessKeySecret: configService.get('access.secret'),
-        bucket: configService.get('bucket.name'),
-      }),
-      inject: [ConfigService],
-    }),
+    // AliOssModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: (configService: ConfigService) => ({
+    //     region: configService.get('alios.endpoint'),
+    //     accessKeyId: configService.get('alios.accesskeyid'),
+    //     accessKeySecret: configService.get('alios.accesskeyecret'),
+    //     bucket: configService.get('alios.bucketname'),
+    //   }),
+    // }),
   ],
-  controllers: [FilesController],
-  // providers: [FilesService,  ConfigService],
-  // exports: [FilesService, AliOssService],
+  // controllers: [FilesController],
+  controllers: [],
   providers: [],
   exports: [],
 })

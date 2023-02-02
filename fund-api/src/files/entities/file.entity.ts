@@ -20,10 +20,6 @@ export class FileEntity extends EntityHelper {
   @Column()
   path: string;
 
-  @Allow()
-  @Column()
-  name: string;
-
   @AfterLoad()
   @AfterInsert()
   updatePath() {

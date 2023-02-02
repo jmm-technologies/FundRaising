@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { AliOssModule, AliOssService } from 'nestjs-ali-oss';
+import { AliOssModule} from 'nestjs-ali-oss';
 import { Event } from './entities/event.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventServices } from './event.service';
@@ -15,15 +15,17 @@ import { FileEntity } from 'src/files/entities/file.entity';
         ConfigModule.forRoot(),
         AliOssModule.registerAsync({
             imports: [ConfigModule],
-            // useFactory: (configService: ConfigService) => ({
-            useFactory: () => ({
-              // Get from env
-            }),
             inject: [ConfigService],
-        }),
+            useFactory: (configService: ConfigService) => ({
+              region: configService.get('alios.endpoint'),
+              accessKeyId: configService.get('alios.accesskeyid'),
+              accessKeySecret: configService.get('alios.accesskeyecret'),
+              bucket: configService.get('alios.bucketname'),
+            }),
+          }),
     ],
     controllers: [EventController],
-    providers: [EventServices, AliOssService],
-    exports: [EventServices, AliOssService],
+    providers: [EventServices, ConfigService],
+    exports: [EventServices, ConfigService],
 })
 export class EventModule { }
