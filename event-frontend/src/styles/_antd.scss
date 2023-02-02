@@ -1,0 +1,45 @@
+.ant-tabs-tab {
+    background: #ffffff 0 0 no-repeat padding-box;
+    box-shadow: 0 3px 20px #00000014;
+    padding: 17px 25px !important;
+    &-active div {
+        color: black !important;
+    }
+}
+.ant-tabs-nav {
+    margin-bottom: 0 !important;
+}
+.ant-btn {
+    border-radius: 0 !important;
+}
+.ant-btn-default {
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+    text-decoration: none;
+    padding: 4px 15px;
+    font-size: 14px;
+}
+// ------------------
+// Modal Styling ------------------
+// ------------------
+.antd-primary--modal {
+    .ant-modal-content {
+        padding: 0px;
+    }
+
+    .ant-modal-header {
+        padding: 16px 16px 10px 22px;
+    }
+    .ant-modal-body {
+        padding: 20px 24px;
+    }
+    .ant-modal-header {
+        border-bottom: 1px solid #eeeeee;
+    }
+    .ant-upload {
+        height: 113px !important;
+        box-shadow: inset 0px 0px 15px #00000014;
+        border: 1px solid #d8d5cd;
+    }
+}

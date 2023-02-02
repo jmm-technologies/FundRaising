@@ -1,0 +1,163 @@
+﻿@using RaiseNow.Auth;
+@inject NavigationManager _nav
+@inject AuthenticationStateProvider _auth
+@inject ISnackbar _snackBar
+@inject IJSRuntime _js
+@inject IMetaMaskService _metaMask
+
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        _nav.LocationChanged += (o, e) =>
+        {
+            _js.InvokeVoidAsync("CloseMobileNav");
+            StateHasChanged();
+        };
+        IMetaMaskService.AccountChangedEvent += async (e) =>
+        {
+            var a = _auth as CustomAuthenticationProvider;
+            a.Notify().RunSynchronously();
+            Console.WriteLine("acc changed");
+            StateHasChanged();
+        };
+    }
+
+
+    private async void ConnectMetamackFunc()
+    {
+        var a = _auth as CustomAuthenticationProvider;
+        try
+        {
+            await a.Notify();
+        }
+        catch(Exception e)
+        {
+            _snackBar.Add(e.Message, Severity.Error);
+        }
+
+    }
+}
+
+<!-- header-area start -->
+<header id="top-menu" class="transparent-head">
+    
+    <div class="main-header-area">
+        <div class="container custom-container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-xl-2 col-lg-2 col-md-6 col-6">
+                    <div class="logo">
+                        <a class="logo-img" href="home">
+                            <img src="assets/img/logo/ufund-logo.png"
+                                 alt="" style="max-width:247px;max-height:73px;" >
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-9 d-none d-lg-block ">
+                    <div class="main-menu d-none d-lg-block">
+                        <nav >
+                            <ul class='d-flex gap-4'>
+                                <li>
+                                    <a class="@((_nav.Uri.EndsWith("/")||_nav.Uri.EndsWith("home"))?"active":"")" href="home">Home</a>
+                                </li>
+                                 <li>
+                                    <a class="@((_nav.Uri.EndsWith("campaigns")||(_nav.Uri.Contains("campaign/")))?"active":"")" href="campaigns">Campaigns</a>
+                                 </li>
+                                <li>
+                                    <a class="@(_nav.Uri.EndsWith("launchcampaign")?"active":"")" href="launchcampaign">Launch Campaign </a>
+                                </li>
+                                <li>
+                                    <a class="@((_nav.Uri.EndsWith("events"))?"active":"")" href="events">Events</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-1 col-md-6 col-6 ">
+                    <div class="hamburger-menu d-lg-none d-xl-none">
+                        <a href="javascript:void(0);" onclick="OpenMobileNav()">
+                            <i class="far fa-bars"></i>
+                        </a>
+                    </div>
+                    <div class="quote-btn d-none d-lg-block d-xl-block">
+                        <AuthorizeView>
+                            <NotAuthorized>
+                                <a href="javascript:void(0);" onclick="@ConnectMetamackFunc" class="theme_btn theme_btn_bg">
+                                    Connect Metamask <MudIcon Icon="@Icons.Filled.AccountBalanceWallet"></MudIcon>
+                                </a>
+                            </NotAuthorized>
+                            <Authorizing>
+                                <a href="javascript:void(0);"  class="theme_btn theme_btn_bg">
+                                    <MudProgressCircular Color="Color.Default"  Indeterminate="true" />
+                                </a>
+                            </Authorizing>
+                            <Authorized>
+                                <a href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value)" target="_blank" class="theme_btn theme_btn_bg">
+                                    @(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Substring(0,5))...@(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Substring(context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Length-12)) <MudIcon Icon="@Icons.Filled.VerifiedUser" Size="MudBlazor.Size.Small"></MudIcon>
+                                </a>
+                            </Authorized>
+                        </AuthorizeView>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- header-area end -->
+<aside class="slide-bar">
+    <div class="close-mobile-menu">
+        <a href="javascript:void(0);" onclick="CloseMobileNav()"><i class="fas fa-times"></i></a>
+    </div>
+
+    <!-- offset-sidebar start -->
+    <div class="offset-sidebar">
+        <div class="offset-widget offset-logo mb-30">
+            <a href="index.html">
+                <img src="assets/img/logo/header_logo_one.png" alt="logo">
+            </a>
+        </div>
+        <div class="offset-widget mb-40">
+            <div class="info-widget">
+                <h4 class="offset-title mb-20">About Us</h4>
+                <p class="mb-30">
+                    But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain
+                    was born and will give you a complete account of the system and expound the actual teachings of
+                    the great explore
+                </p>
+                <a class="theme_btn theme_btn_bg" href="contact.html">Contact Us</a>
+            </div>
+        </div>
+        <div class="offset-widget mb-30 pr-10">
+            <div class="info-widget info-widget2">
+                <h4 class="offset-title mb-20">Contact Info</h4>
+                <p> <i class="fal fa-address-book"></i> 23/A, Miranda City Likaoli Prikano, Dope</p>
+                <p> <i class="fal fa-phone"></i> +0989 7876 9865 9 </p>
+                <p> <i class="fal fa-envelope-open"></i> info@example.com </p>
+            </div>
+        </div>
+    </div>
+    <!-- offset-sidebar end -->
+    <!-- side-mobile-menu start -->
+    <nav class="side-mobile-menu">
+        <ul id="mobile-menu-active">
+            <li >
+                <a href="/">Home</a>
+            </li>
+             <li >
+                <a href="campaigns" >Campaigns</a>
+            </li>
+             <li >
+                <a href="launchcampaign" >Launch Campaign</a>
+            </li>
+            <li>
+                <a href="about" >About</a>
+            </li>
+            
+        </ul>
+    </nav>
+    <!-- side-mobile-menu end -->
+</aside>
+<div class="body-overlay"></div>
+<!-- slide-bar end -->

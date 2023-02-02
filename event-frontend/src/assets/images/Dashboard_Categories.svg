@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="command" transform="translate(1 1)">
+    <path id="command-2" data-name="command" d="M18,3a3,3,0,0,0-3,3V18a3,3,0,1,0,3-3H6a3,3,0,1,0,3,3V6A3,3,0,1,0,6,9H18a3,3,0,0,0,0-6Z" transform="translate(-3 -3)" fill="none" stroke="#853cbc" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+  </g>
+</svg>

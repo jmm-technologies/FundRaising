@@ -1,0 +1,121 @@
+﻿@page "/campaigns"
+@inherits IPFSBase
+
+<PageTitle>Campaigns</PageTitle>
+@code {
+
+    public List<Campagin> CampaignsList { get; set; } = new();
+    public bool _loading { get; set; } = true;
+    public string _category { get; set; } = "ALL";
+    protected override Task OnInitializedAsync()
+    {
+        var task = Task.Run(async () =>
+            {
+                CampaignsList = await GetAllCampaigns();
+                _loading = false;
+                StateHasChanged();
+            });
+        return base.OnInitializedAsync();
+    }
+
+
+    private async void FilterFunc(string query)
+    {
+        _loading = true;
+        _category = query;
+        StateHasChanged();
+        CampaignsList = await GetCampaignsByCategory(query);
+        _loading = false;
+        StateHasChanged();
+    }
+}
+
+<!--page-title-area start-->
+<section class="page-title-area d-flex justify-content-center align-items-center" style="background-image:url(assets/img/bg/campaignPageHeader.png);">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 offset-xl-1">
+                <div class=" text-center">
+                    <h1 class="page-title  fw-600 f-45 wow fadeInUp2 animated text-buzz-in " data-wow-delay='.1s'>Campaigns</h1>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--page-title-area area-->
+<!--project-area start-->
+<section class="project-01-area pt-125 pb-100">
+    <div class="container">
+        <div class="row mb-50 align-items-center">
+            <div class="col-xl-10 col-lg-9 col-md-9 col-sm-8">
+                <h5>Showing All @CampaignsList.Count() Results</h5>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-4">
+                <div class="select-area mb-50">
+                    @*                            <select class="sort-area" name="short" id="short" style="display: none;">
+                    <option value="short By">short By</option>
+                    <option value="FYP">FYP</option>
+                    <option value="IT">IT</option>
+                    <option value="MEDICAL">MEDICAL</option>
+                    <option value="Old">Olsd</option>
+                    </select>*@
+                    <div class="nice-select sort-area" tabindex="0">
+                        <span class="current">
+                            All
+                        </span>
+                        <ul class="list">
+                            <li data-value="ALL" onclick="@(()=>FilterFunc("ALL"))" class="option selected focus">All</li>
+                            <li data-value="FYP" onclick="@(()=>FilterFunc("FYP"))" class="option">FYP</li>
+                            <li data-value="IT" onclick="@(()=>FilterFunc("IT"))" class="option">IT</li>
+                            <li data-value="MEDICAL" onclick="@(()=>FilterFunc("MEDICAL"))" class="option">MEDICAL</li>
+                            <li data-value="EDUCATION" onclick="@(()=>FilterFunc("EDUCATION"))" class="option">EDUCATION</li>
+                            <li data-value="FOOD" onclick="@(()=>FilterFunc("FOOD"))" class="option">FOOD</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (_loading)
+        {
+            <div id="" class="cuustom-preloader preloader cuustom-preloader">
+                <span></span>
+                <span></span>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var item in CampaignsList)
+                {
+                    <CampaignCard UnitCampaign="item" />
+                }
+            </div>
+        }
+
+    </div>
+</section>
+<!--project-area end-->
+<!--cta-area start-->
+@* <section class="cta-area theme-bg pt-55 pb-25">
+            <div class="container">
+                <div class="row align-items-md-center">
+                    <div class="col-xl-9 col-lg-9 col-md-8">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="section-title mb-30">
+                                <h2>Become Our <b>Premium</b> Partner ?</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="cta-btn text-left text-md-right">
+                                <a class="theme_btn theme_btn_bg" href="contact.html">contact us <i
+                                    class="far fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
+<!--cta-area end-->

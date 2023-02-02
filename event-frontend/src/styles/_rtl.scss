@@ -1,0 +1,47 @@
+[dir="rtl"] {
+    .sidebar {
+        div {
+            padding-bottom: 34px;
+            margin-left: 0px;
+            margin-right: 17px;
+        }
+        p {
+            margin-left: 0px;
+            margin-right: 17px;
+        }
+        ul {
+            li {
+                a {
+                    padding-left: 0px;
+                    padding-right: 15px;
+                }
+            }
+            li.active::before {
+                left: auto;
+                right: 0;
+            }
+        }
+    }
+    .content {
+        flex: 1 !important;
+        margin-left: 0px !important;
+        margin-right: 264px !important;
+        .action-edit-icon {
+            margin-left: 15px;
+            margin-right: 0px;
+        }
+        .graph-icon {
+            margin-right: 0px;
+            margin-left: 1rem;
+        }
+        .orders-charges-adjustment-from {
+            margin-right: 1.5rem;
+        }
+        .secondary--btn {
+            margin-left: 0px;
+            margin-right: 1.5rem;
+            width: 6rem;
+        }
+}
+
+}

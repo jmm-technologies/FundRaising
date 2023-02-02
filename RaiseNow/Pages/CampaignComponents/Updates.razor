@@ -1,0 +1,32 @@
+﻿@code {
+    [Parameter]
+    public List<CampainUpdate> CampaignUpdates { get; set; } = new();
+}
+<section class="project-image-text-area pb-90 pt-25">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <ul class="timeline mb-100">
+                    @if (CampaignUpdates != null)
+                    {
+                        @foreach (var item in CampaignUpdates)
+                        {
+                            <li class="timeline-list wow fadeInUp2 animated" data-wow-delay='.1s'>
+                                <div class="update-content">
+                                    <div class="update-meta">
+                                        <span><i class="far fa-calendar-alt"></i> @item.timestamp</span>
+                                    </div>
+                                    <h4 class="left-line">@item.tittle</h4>
+                                    <p>@item.dsecription</p>
+                                </div>
+
+                            </li>
+                            <br />
+                        }
+                    }
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>

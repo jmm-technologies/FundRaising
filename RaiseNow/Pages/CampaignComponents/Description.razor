@@ -1,0 +1,21 @@
+﻿
+@code{
+    [Parameter]
+    public string Contents { get; set; }
+}
+
+<section class="project-image-text-area pt-35 pb-90 wow fadeInUp animated" data-wow-delay='.3s'>
+    <div class="container">
+        @if(Contents == null)
+        {
+            <div id="" class="cuustom-preloader preloader cuustom-preloader">
+                <span></span>
+                <span></span>
+            </div>
+        }
+        else
+        {
+            <div>@Contents</div>
+        }
+    </div>
+</section>

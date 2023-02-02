@@ -1,0 +1,64 @@
+﻿@inherits IPFSBase
+@inject ISnackbar _snackBar
+@code {
+    [Parameter]
+    public string? CampaignAddress { get; set; }
+    private UpdateProgressVM _vm { get; set; } = new();
+    private bool _apiCall { get; set; } = false;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authTask { get; set; }
+    private async Task ValidSubmitUpdateProgress()
+    {
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
+        {
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
+            return;
+        }
+        _apiCall = true;
+        StateHasChanged();
+        try
+        {
+            await UpdateCampaignProgress(CampaignAddress, _vm.Tittle, _vm.Description);
+            _snackBar.Add("Campaign Status Updated Successfully", Severity.Success);
+            _vm = new();
+            _apiCall = false;
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            _snackBar.Add(e.Message, Severity.Error);
+            _apiCall = false;
+            StateHasChanged();
+        }
+    }
+}
+<div class="row">
+
+    <EditForm Model="_vm" OnValidSubmit="ValidSubmitUpdateProgress">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <MudItem xs="6" sm="12" md="6" lg="6">
+            <MudTextField @bind-Value="_vm.Tittle" Class="custom-mud-input" Label="Update Title" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Abc" AdornmentColor="Color.Primary" />
+            <ValidationMessage For="()=>_vm.Tittle"></ValidationMessage>
+        </MudItem>
+        <MudItem xs="6" sm="12" md="6" lg="6">
+            <MudTextField @bind-Value="_vm.Description" Class="custom-mud-input" Label="Update Description" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Abc" AdornmentColor="Color.Primary" />
+            <ValidationMessage For="()=>_vm.Description"></ValidationMessage>
+        </MudItem>
+        <MudItem xs="12" sm="12" md="12" lg="12" Style="text-align:center;">
+            <MudButton Disabled="_apiCall" Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary">
+                @if (_apiCall)
+                {
+                    <MudProgressCircular Class="ms-n1" Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2" Color="Color.Primary">Update Campaign Progress</MudText>
+                }
+                else
+                {
+                    <div>Update Progress</div>
+                }
+            </MudButton>
+        </MudItem>
+    </EditForm>
+
+</div>

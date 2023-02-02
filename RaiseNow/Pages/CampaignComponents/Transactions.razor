@@ -1,0 +1,38 @@
+﻿@code{
+    [Parameter]
+    public List<Transaction> List { get; set; }
+}
+
+<div class="backer-list-table pt-45 pb-130">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Address</th>
+                                                <th scope="col">Donate Amount</th>
+                                                <th scope="col">Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+      @if(List!=null)
+            {
+                @foreach (var item in List)
+                {
+                    <tr>
+                        <td><a target="_blank" href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+item.donar)">@item.donar</a></td>
+                        <td>@item.amount</td>
+                        <td>@item.timestamp</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    
+                </tr>
+            }
+
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>

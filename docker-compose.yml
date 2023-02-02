@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  queueservice:
+    image: ${DOCKER_REGISTRY-}queueservice
+    build:
+      context: .
+      dockerfile: RabbitMQ/Dockerfile
+  emailservice:
+    image: ${DOCKER_REGISTRY-}emailservice
+    build:
+      context: .
+      dockerfile: EmailService/Dockerfile
+    depends_on:
+      - queueservice

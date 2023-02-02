@@ -1,0 +1,66 @@
+﻿@inherits IPFSBase
+
+@code{
+    [Parameter]
+    public Campagin UnitCampaign { get; set; }
+    public List<Transaction> Transactions { get; set; } = null;
+
+    protected override Task OnInitializedAsync()
+    {
+        
+        GetTranactionsByAddress(UnitCampaign.campaignaddress).ContinueWith((e) =>
+        {
+            Transactions = e.Result;
+            StateHasChanged();
+        });
+        return base.OnInitializedAsync();
+    }
+
+}
+<div class="col-xl-6 col-lg- col-md-6">
+    <div class="projects projects-02 white-bg mb-30 wow fadeInUp2 animated" data-wow-delay='.6s'>
+        <div class="projects__thumb pos-rel">
+            <img src="@(StaticUtils.PINATA_GATEWAY+"/"+UnitCampaign.imghash)" alt="">
+            <a href="#" class="new-tag hot_tag">@UnitCampaign.category</a>
+        </div>
+        <div class="projects__content">
+            <h4>
+                <a href="campaign/@UnitCampaign.campaignaddress">
+                    @UnitCampaign.title
+                </a>
+            </h4>
+            <div class="skill mb-30">
+                <p>Required&nbsp;&nbsp;<span>@UnitCampaign?.amountrequired&nbsp;ETH</span></p>
+                <div class="progress">
+                    <div class="progress-bar" 
+                    aria-valuenow="100"
+                    style="width:@(Transactions!=null?((Transactions?.Select(a=>float.Parse(a.amount)).Sum())/float.Parse(UnitCampaign?.amountrequired))*100 :"0")%;"
+                    aria-valuemin="0" 
+                    aria-valuemax="@UnitCampaign?.amountrequired"
+                    >
+                        <h5>@(Transactions != null ? (String.Format("{0:0.00}", ((Transactions?.Select(a => float.Parse(a.amount)).Sum()) / float.Parse(UnitCampaign?.amountrequired)) * 100 )): "0")%</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="projects__content--manager">
+                <ul class="project-manager">
+                    <li>
+                        <a href="#">
+                            <img src="assets/img/project/01.png" alt="">
+                            <span>@(UnitCampaign.owner.Substring(0, 4))...@(UnitCampaign.owner.Substring(UnitCampaign.owner.Length-5))</span>
+                        </a>
+                    </li>
+                    <li>
+                        <p class="time">
+                            <!-- <i class="far fa-clock"></i> @DateTime.Parse(UnitCampaign.publisheddate, System.Globalization.CultureInfo.CurrentCulture).ToString("MM:dd:yyyy") -->
+                            
+                        </p>
+                            <i class="far fa-clock"></i> @(UnitCampaign.publisheddate)
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+

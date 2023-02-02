@@ -1,0 +1,396 @@
+﻿@page "/campaignv2/{campaignaddress}"
+@inherits IPFSBase
+@inject ISnackbar _snackBar
+@inject IMetaMaskService _metaMaskService
+
+<PageTitle>Campaign</PageTitle>
+
+@code {
+    [Parameter]
+    public string CampaignAddress { get; set; }
+    public Campagin UnitCampaign { get; set; } = null;
+    public string Description { get; set; } = null;
+    public double DonateAmount { get; set; } = 0;
+    public List<Transaction> Transactions { get; set; } = null;
+    [CascadingParameter]
+    private Task<AuthenticationState> _authTask { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        Task<Campagin> campaign = GetCampaginsByAddress(CampaignAddress);
+        campaign.ContinueWith((e) =>
+        {
+            UnitCampaign = e.Result;
+            StateHasChanged();
+            GetDescriptionFromPINATA(UnitCampaign.descriptionhash)
+                .ContinueWith((f) =>
+                {
+                    Description = f.Result;
+                    StateHasChanged();
+                });
+        });
+        GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
+        {
+            Transactions = e.Result;
+            StateHasChanged();
+        });
+        return base.OnInitializedAsync();
+    }
+
+
+    private async void DonateFunc()
+    {
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
+        {
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
+            return;
+        }
+        else
+        {
+            try
+            {
+                await DonateFunc(DonateAmount, CampaignAddress);
+                _snackBar.Add($"Transaction Confirmed", Severity.Success);
+                await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
+                {
+                    Transactions = e.Result;
+                    StateHasChanged();
+                });
+            }
+            catch (Exception e)
+            {
+                _snackBar.Add(e.Message, Severity.Error);
+            }
+        }
+    }
+    private async void ApproveFunc()
+    {
+        var _auth = await _authTask;
+        var user = _auth.User;
+        if (!(user.Identity.IsAuthenticated))
+        {
+            _snackBar.Add($"Please connect to Metamask!", Severity.Error);
+            return;
+        }
+        else
+        {
+            try
+            {
+                await ApproveCampaignFunc(CampaignAddress);
+                _snackBar.Add($"Transaction Confirmed", Severity.Success);
+            }
+            catch (Exception e)
+            {
+                _snackBar.Add(e.Message, Severity.Error);
+            }
+        }
+    }
+
+    private void IncrementFunc()
+    {
+        DonateAmount = DonateAmount + 0.1;
+        DonateAmount = Math.Round(DonateAmount, 2);
+    }
+    private void DecrementFunc()
+    {
+        if (DonateAmount - 0.1 > 0)
+            DonateAmount = DonateAmount - 0.1;
+        else
+            DonateAmount = 0;
+        DonateAmount = Math.Round(DonateAmount, 2);
+    }
+}
+
+
+<!--page-title-area start-->
+<section class="page-title-area" style="background-image:url(assets/img/bg/bg-custom.jpg);">
+    <div class="right-border-shape">
+        <img src="assets/img/shape/02.png" alt="">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-10 offset-xl-1">
+                <div class="page-title-wrapper text-center">
+                    <h1 class="page-title wow fadeInUp2 animated" data-wow-delay='.1s'>Campaign V2</h1>
+                    <div class="breadcrumb">
+                        <ul class="breadcrumb-list wow fadeInUp2 animated" data-wow-delay='.3s'>
+                            <li><a href="index.html">Address <i class="far fa-chevron-right"></i></a></li>
+                            <li><a class="active" target="_blank" href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+CampaignAddress)">@CampaignAddress</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--page-title-area area-->
+<!--project-area start-->
+<section class="project-image-area grey-bg pt-130 pb-100" style="background-image:url(assets/img/shape/09.png);">
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col-xl-7 card-img-height">
+                <div class="project-img mb-30 wow fadeInUp2 animated" data-wow-delay='.1s'>
+                    <img src="@(StaticUtils.PINATA_GATEWAY+"/"+UnitCampaign?.imghash)" class="card-img-height" alt="">
+                </div>
+            </div>
+            <div class="col-xl-5  wow fadeInUp2 animated card-img-height" data-wow-delay='.1s'>
+                <div class="projects project-cart white-bg mb-30 card-img-height">
+                    <div class="projects__content">
+                        <a href="#" class="new-tag">@UnitCampaign?.category</a>
+                        <h3><a href="javascript:void(0);">@(UnitCampaign?.title)</a></h3>
+                        <div class="projects__manager d-sm-flex align-items-center mb-40">
+                            <div class="manager-img mr-20">
+                                <img src="assets/img/project/03.png" alt="">
+                            </div>
+                            <div class="name">
+                                <a target="_blank" href="@(StaticUtils.GOERLI_ETHERSCAN+"/"+UnitCampaign?.owner)">
+                                    <h5>@(UnitCampaign?.owner.Substring(0, 5))...@(UnitCampaign?.owner.Substring(UnitCampaign.owner.Length - 12))</h5>
+                                </a>
+                                <address>
+                                    @*<a href="#">9 Campaigns</a>*@
+                                    @*<a href="#"><i class="far fa-map-marker-alt"></i> 55 Main Street, New York</a>*@
+                                    <a href="#"><i class="far fa-clock"></i>  @((UnitCampaign != null) ? DateTime.Parse(UnitCampaign?.publisheddate, System.Globalization.CultureInfo.CurrentCulture).ToString("MM:dd:yyyy") : "")</a>
+                                </address>
+                            </div>
+                        </div>
+                        <div class="skill mb-20">
+                            <p class="skill-para">
+                                Required &nbsp;&nbsp;
+                                <span>
+                                    @UnitCampaign?.amountrequired
+                                    &nbsp;ETH
+                                </span>
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar"
+                                     role="progressbar"
+                                     aria-valuenow="100"
+                                     style="width:@(Transactions!=null?((Transactions?.Select(a=>float.Parse(a.amount)).Sum())/float.Parse(UnitCampaign?.amountrequired))*100 :"0")%;"
+                                     aria-valuemin="0"
+                                     aria-valuemax="@UnitCampaign?.amountrequired">
+                                    <h5>@(Transactions != null ? ((Transactions?.Select(a => float.Parse(a.amount)).Sum()) / float.Parse(UnitCampaign?.amountrequired)) * 100 : "0")%</h5>
+                                </div>
+                            </div>
+                        </div>
+                        @*<br />*@
+                        @*<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusante doloremque lauda</p>*@
+                        <ul class="cart-list d-sm-flex align-items-center">
+                            <li>
+                                <form class="cart-plus-minus" action="form.php">
+                                    <div class="plus-minus pos-rel">
+                                        <input type="text" @bind-value="@DonateAmount">
+                                        <div @onclick="DecrementFunc" class="updown plus"><i class="far fa-chevron-left"></i></div>
+                                        <div @onclick="IncrementFunc" class="updown minus"><i class="far fa-chevron-right"></i></div>
+                                    </div>
+                                </form>
+                            </li>
+                            <li>
+                                <a class="theme_btn theme_btn_bg custom-theme-btn" @onclick="DonateFunc" data-animation="fadeInLeft" data-delay=".5s">
+                                    Donate
+                                </a>
+                            </li>
+                            <AuthorizeView>
+                                <Authorized>
+
+                                    @if (context.User.Claims.Where(a => a.Type == "address").FirstOrDefault().Value.Equals("0xb8d0591f16625c75018f0ae22f11ed6379c2e124"))
+                                    {
+                                        <li>
+                                            <a class="theme_btn theme_btn_bg custom-theme-btn" @onclick="ApproveFunc" data-animation="fadeInLeft" data-delay=".5s">
+                                                Approve
+                                            </a>
+                                        </li>
+                                    }
+
+                     
+
+                                </Authorized>
+                                <NotAuthorized>---</NotAuthorized>
+                            </AuthorizeView>
+                            @*<i class="far fa-arrow-right"></i>*@
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--project-area end-->
+<!--our-overview-area start-->
+<section class="our-overview-area pos-rel  wow fadeInUp2 animated" data-wow-delay='.1s'>
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <ul class="nav nav-tabs nav-tabs-02" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link theme_btn active" id="home-tab" data-toggle="tab" href="#home-01" role="tab" aria-controls="home-01" aria-selected="true">Description</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link theme_btn" id="profile-tab" data-toggle="tab" href="#profile-01" role="tab" aria-controls="profile-01" aria-selected="false">Updates</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link theme_btn" id="contact-tab" data-toggle="tab" href="#contact-02" role="tab" aria-controls="contact-02" aria-selected="false">Backer List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link theme_btn" id="contact2-tab" data-toggle="tab" href="#contact-03" role="tab" aria-controls="contact-03" aria-selected="false">Reviews</a>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home-01" role="tabpanel" aria-labelledby="home-tab">
+                        <Description Contents="@Description" />
+                        @*<AuthorizeView>
+                        <Authorized>
+                        Auth
+                        </Authorized>
+                        <NotAuthorized>
+                        sada
+                        </NotAuthorized>
+                        <Authorizing>
+                        asdsadxzczxc
+                        </Authorizing>
+                        </AuthorizeView>*@
+                    </div>
+                    <div class="tab-pane fade" id="profile-01" role="tabpanel" aria-labelledby="profile-tab">
+                        @*<Updates/>*@
+                        <div style="text-align:center;height:50px;"><h3>Coming soon....</h3></div>
+                    </div>
+                    <div class="tab-pane fade" id="contact-02" role="tabpanel" aria-labelledby="contact-tab">
+                        <Transactions List="@Transactions" />
+                    </div>
+                    <div class="tab-pane fade" id="contact-03" role="tabpanel" aria-labelledby="contact2-tab">
+                        <div style="text-align:center;height:50px;"><h3>Coming soon....</h3></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--our-overview-area end-->
+<!--project-area start-->
+@* <section class="project-area-04 grey-bg pt-125 pb-100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-10 offset-xl-1">
+                        <div class="section-title text-center mb-85 wow fadeInUp animated" data-wow-delay='.1s'>
+                            <h6 class="left-line pl-75 pr-75">Popular Project</h6>
+                            <h2>We’ve Done Many Crowd <br>
+                                <span>Founding Project</span></h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="projects projects-02 white-bg mb-30 wow fadeInUp animated" data-wow-delay='.1s'>
+                            <div class="projects__thumb pos-rel">
+                                <img src="assets/img/project/05.jpg" alt="">
+                                <a href="#" class="new-tag">new</a>
+                            </div>
+                            <div class="projects__content">
+                                <h4><a href="project-image.html">Gen3 Airoha Air Pro 3 TWS
+                                        Cancel Headphone</a></h4>
+                                <div class="skill mb-30">
+                                    <p>Raised <span>$2535</span></p>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="95">
+                                            <h5>95%</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="projects__content--manager">
+                                    <ul class="project-manager">
+                                        <li><a href="#"><img src="assets/img/project/01.png" alt="">
+                                                <span>Somalia</span></a></li>
+                                        <li>
+                                            <p class="time"><i class="far fa-clock"></i> 7 Days Left</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="projects projects-02 white-bg mb-30 wow fadeInUp animated" data-wow-delay='.3s'>
+                            <div class="projects__thumb pos-rel">
+                                <img src="assets/img/project/06.jpg" alt="">
+                                <a href="#" class="new-tag">new</a>
+                            </div>
+                            <div class="projects__content">
+                                <h4><a href="project-image.html">Oculus Rift PC-Powered
+                                        VR Gaming Headset</a></h4>
+                                <div class="skill mb-30">
+                                    <p>Raised <span>$2535</span></p>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="85">
+                                            <h5>85%</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="projects__content--manager">
+                                    <ul class="project-manager">
+                                        <li><a href="#"><img src="assets/img/project/01.png" alt="">
+                                                <span>Somalia</span></a></li>
+                                        <li>
+                                            <p class="time"><i class="far fa-clock"></i> 7 Days Left</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-6">
+                        <div class="projects projects-02 white-bg mb-30 wow fadeInUp animated" data-wow-delay='.5s'>
+                            <div class="projects__thumb pos-rel">
+                                <img src="assets/img/project/07.jpg" alt="">
+                                <a href="#" class="new-tag">new</a>
+                            </div>
+                            <div class="projects__content">
+                                <h4><a href="project-image.html">Inspiron 13.3 2-In Laptop I3
+                                        4GB 50GB Windows</a></h4>
+                                <div class="skill mb-30">
+                                    <p>Raised <span>$2535</span></p>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="85">
+                                            <h5>85%</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="projects__content--manager">
+                                    <ul class="project-manager">
+                                        <li><a href="#"><img src="assets/img/project/01.png" alt="">
+                                                <span>Somalia</span></a></li>
+                                        <li>
+                                            <p class="time"><i class="far fa-clock"></i> 7 Days Left</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--project-area end-->
+        <!--cta-area start-->
+        <section class="cta-area theme-bg pt-55 pb-25">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-9 col-lg-9 col-md-8">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="section-title mb-30">
+                                <h2>Become Our <b>Premium</b> Partner ?</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-4">
+                        <div class="cta-wrapper wow fadeInUp2 animated" data-wow-delay='.1s'>
+                            <div class="cta-btn  text-md-right">
+                                <a class="theme_btn theme_btn_bg" href="contact.html">contact us <i
+                                    class="far fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!--cta-area end-->*@

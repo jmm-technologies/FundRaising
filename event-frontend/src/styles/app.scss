@@ -1,0 +1,90 @@
+// fonts cdn
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins";
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+// import Neusa Next Std font
+
+body,
+#app {
+  height: 100%;
+  font-family: "Poppins";
+}
+p {
+  margin-bottom: 5px !important;
+  font-family: "Poppins";
+}
+a {
+  color: #707070;
+  font-family: "Poppins";
+}
+a:hover {
+  color: #707070;
+}
+textarea {
+  resize: none !important;
+}
+.rdt_Table {
+  padding: 30px 20px;
+}
+.rdt_Table .rdt_TableRow:hover {
+  background-color: rgb(235, 235, 235);
+  // color: #fff;
+}
+// .rdt_TableCell:last-child {
+//   border-right: 1px solid #EEEEEE !important;
+// }
+// rdt_TableRow
+// .rdt_TableRow {
+//   border-bottom: 1px solid #EEEEEE !important;
+// }
+// .rdt_TableRow:last-child {
+//   border-bottom: 1px solid #EEEEEE !important;
+// }
+// .rdt_TableHeadRow:last-child {
+//   border-right: 1px solid #EEEEEE !important;
+// }
+
+// .ant-upload-wrapper {
+//   width: 300px !important;
+//   height: 600px !important;
+// }
+// .ant-upload-wrapper {
+//   width: 300px !important;
+//   height: 400px !important;
+// }
+// .ant-upload{
+//   width: 300px !important;
+//   height: 400px !important;
+// }
+
+.ant-upload-wrapper .ant-upload-drag {
+  width: 300px !important;
+  height: 400px !important;
+  border-radius: 10px;
+  padding: 0px;
+  margin: 0px;
+}
+.ant-upload-wrapper .ant-upload-drag:active {
+  border: 1px solid #03b664 !important;
+}
+.ant-upload-wrapper .ant-upload-drag:hover {
+  border: 1px solid #03b664 !important;
+}
+.ant-upload-wrapper .ant-upload-drag:focus {
+  border: 1px solid #03b664 !important;
+}
+
+@import "reset";
+@import "typography";
+@import "antd";
+@import "common";
+@import "pages/login";
+@import "pages/layout";
+@import "pages/settings";
+@import "pages/dashbaord";
+@import "./_rtl.scss";
