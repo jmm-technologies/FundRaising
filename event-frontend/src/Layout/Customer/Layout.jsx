@@ -61,20 +61,6 @@ function Layout({ activePage, children }) {
             navigate('/login');
         }
     }, [data.isLoggedIn, navigate]);
-
-
-  
-
-
-
-    
-    
-
-
-
-
-
-
     return (
         <ConfigProvider
             theme={{

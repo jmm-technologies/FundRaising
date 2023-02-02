@@ -8,16 +8,16 @@ import CreateEvent from './Pages/Admin/events/CreateEvent';
 import SidebarProvider from './Constants/SidebarContext';
 function App() {
   return (
-      <SidebarProvider>
+    <SidebarProvider>
       <div className="App">
         <Routes>
           <Route path="/login" element={<UserLogin />} />
-          <Route path="/eventlist" element={<UserPlotsList />} />
-          <Route path="/eventdetail:id" element={<UserPlotDetail />} />
+          <Route path="/event" element={<UserPlotsList />} />
+          <Route path="/event/:id" element={<UserPlotDetail />} />
           <Route path="/createevent" element={<CreateEvent />} />
         </Routes>
       </div>
-      </SidebarProvider>
+    </SidebarProvider>
   );
 }
 

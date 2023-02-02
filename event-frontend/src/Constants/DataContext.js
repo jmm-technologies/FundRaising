@@ -25,7 +25,7 @@
 //             const user = response.data;
 //             setUser(user);
 //             localStorage.setItem("user", JSON.stringify(user));
-//             navigate("/eventlist");
+//             navigate("/event");
 //         } catch (error) {
 //             console.error(error);
 //         }

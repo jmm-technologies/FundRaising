@@ -1,7 +1,7 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
-import  config  from '../config.json';
+import config from '../config.json';
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
@@ -11,7 +11,7 @@ const AuthProvider = ({ children }) => {
 
     const login = async (email, password) => {
         try {
-            const response = await axios.post(apiKey+'/auth/admin/login', {
+            const response = await axios.post(apiKey + '/auth/admin/login', {
                 email,
                 password,
             });
@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
             localStorage.setItem("user", JSON.stringify(user));
             // check user lgoin or not
             checkUserLoggedIn();
-            navigate("/eventlist");
+            navigate("/event");
         } catch (error) {
             return "Invalid email or password"
         }

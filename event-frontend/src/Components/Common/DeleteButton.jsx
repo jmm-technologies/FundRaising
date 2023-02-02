@@ -1,34 +1,37 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Button, message, Modal } from "antd";
 import RemoveCircleIcon from "../../assets/images/Icons/delete-icon.svg";
 import RemoveCircleIconWhite from "../../assets/images/Icons/Delete_icon_white.svg";
 import dangerIcon from "../../assets/images/Icons/danger.png";
-// import { useLanguage } from '../../Constants/LanguageContext';
+import { deleteEvent } from "../../features/showevents/showEventSlice";
 
 function DeleteButton({
     name = "",
     apiEndpoint = "",
     text = "",
     noOfItems = 0,
-    showWhiteImg = false
+    showWhiteImg = false,
+    id
 }) {
     const [isDeleteAble, setIsDeleteAble] = React.useState(noOfItems === 0);
     const [isModalVisible, setIsModalVisible] = React.useState(false);
-    // const { t } = useLanguage();
+    const dispatch = useDispatch();
 
     const toggleModalState = () => {
         setIsModalVisible(!isModalVisible);
     }
     const handleDelete = () => {
-    //     Inertia.delete(apiEndpoint, {
-    //         onSuccess: () => {
-    //             message.success(t(`${name} is deleted successfully`))
-    //         },
-    //         onError: (errors) => {
-    //             message.error(errors?.error_message);
-    //         },
-    //         preserveState: false,
-    //     });
+        dispatch(deleteEvent(id))
+            .then((res) => {
+                if (res.payload) {
+                    message.success("Successfully deleted");
+                }
+            })
+            .catch((err) => {
+                message.error("Something went wrong");
+            });
+        toggleModalState();
     };
     return (
         <div>

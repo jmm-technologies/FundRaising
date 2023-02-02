@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Form, Input, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import loginlogo from "../../../assets/images/loginLogo3.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { adminLogin } from "../../../features/auth/adminAuthSlice";
 
 function Login() {
@@ -16,7 +16,7 @@ function Login() {
         dispatch(adminLogin(values)).then((res) => {
             if (res.payload.token) {
                 message.success("Login Successfully");
-                navigate("/eventlist");
+                navigate("/event");
             } else {
                 message.error("Login Failed");
             }
@@ -27,12 +27,13 @@ function Login() {
     };
 
     // check if user is already logged in
+    const data = useSelector((state) => state.adminAuthSlice);
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/eventlist");
+        if (data.isLoggedIn === false) {
+            navigate('/login');
         }
-    }, []);
+    }, [data.isLoggedIn, navigate]);
+
     return (
         <div className="container-fluid">
             <div className="row no-gutter">
