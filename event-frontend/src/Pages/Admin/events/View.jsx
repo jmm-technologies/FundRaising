@@ -17,7 +17,6 @@ import HeaderOnly from "../../../Components/Common/HeaderOnly";
 import { BeforUploadFileCheck, FileSizeCheck } from "../../../Constants/global";
 import FormTextInput from "../../../Components/Common/FormTextInput";
 import FormTextAreaInput from "../../../Components/Common/FormTextAreaInput";
-import ChangePassword from "../Profile/ChangePassword";
 import  group from "../../../assets/images/group.png";
 
 
@@ -161,29 +160,22 @@ function CustomeDetail() {
                            </div>
                        </div>
                        <div className="d-flex gap-3 justify-content-end mt-4">
-                           {/* <div className="col"> */}
                            <Button
                                        htmlType="submit"
                                        className="btn-height custom-lg-btn btn-cancel"
-                                   // className="primary--btn btn-height"
 
                                    >
                                        {"Cancel"}
                                    </Button>
                                
-                           {/* </div> */}
-                           {/* <div className="col d-flex justify-content-end"> */}
                                    <Button
                                        htmlType="submit"
                                        type="primary"
                                        className="primary--btn btn-height custom-lg-btn"
-                                   // className="primary--btn btn-height"
 
                                    >
                                        {"Save changes"}
-                                   </Button>
-                                  
-                           {/* </div> */}
+                                   </Button>                       
                        </div>
 
 

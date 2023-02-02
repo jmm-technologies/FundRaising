@@ -1,10 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/app.scss';
 import { Routes, Route } from "react-router-dom";
-import UserLogin from './Pages/Customer/Auth/Login';
-import UserPlotsList from './Pages/Customer/Plots/Index';
-import UserPlotDetail from './Pages/Customer/Plots/View';
-import CreateEvent from './Pages/Customer/Plots/CreateEvent';
+import UserLogin from './Pages/Admin/Auth/Login';
+import UserPlotsList from './Pages/Admin/events/Index';
+import UserPlotDetail from './Pages/Admin/events/View';
+import CreateEvent from './Pages/Admin/events/CreateEvent';
 import SidebarProvider from './Constants/SidebarContext';
 function App() {
   return (
