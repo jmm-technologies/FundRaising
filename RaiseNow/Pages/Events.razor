@@ -1,4 +1,18 @@
 ﻿@page "/events"
+@inject HttpClient _httpClient
+@code {
+    public List<EventVM> EventsList { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            EventsList = await _httpClient.GetFromJsonAsync<List<EventVM>>(RaiseNow.Utils.StaticUtils.EVENTS_API);
+            StateHasChanged();
+        }
+        //return base.OnAfterRenderAsync(firstRender);
+    }
+}
 <!--page-title-area start-->
 <section class="page-title-area d-flex justify-content-center align-items-center" style="background-image:url(assets/img/bg/campaignPageHeader.png);">
     <div class="container">
@@ -16,53 +30,28 @@
 <section class="events-area pt-130 pb-45">
     <div class="container">
         <h1 class='f-26 fw-500'>
-        Showing All Events
+            Showing All Events
         </h1>
         <div class="row mt-30 ">
-            <div class="col-xl-6 col-lg-6 col-12">
-                    <div class='custom-PrimaryCards '>
-                            <img src="assets/img/eventPic1.png" class='w-100' alt="">
+
+            @if (EventsList != null)
+            {
+                @foreach (var item in EventsList)
+                {
+                    <div class="col-xl-6 col-lg-6 col-12">
+                        <div class='custom-PrimaryCards '>
+                            <img src="@item.photoId.path" class='w-100' alt="">
                             <h1 class='f-24 fw-500 mt-16px'>
-                                Event Title 01
+                                @item.name
                             </h1>
                             <p class='mt-10px'>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                                @item.description
                             </p>
+                        </div>
                     </div>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-12">
-                    <div class='custom-PrimaryCards '>
-                            <img src="assets/img/eventPic2.png" class='w-100' alt="">
-                            <h1 class='f-24 fw-500 mt-16px'>
-                                Event Title 02
-                            </h1>
-                            <p class='mt-10px'>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                            </p>
-                    </div>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-12 mt-30">
-                    <div class='custom-PrimaryCards '>
-                            <img src="assets/img/eventPic3.png" class='w-100' alt="">
-                            <h1 class='f-24 fw-500 mt-16px'>
-                                Event Title 03
-                            </h1>
-                            <p class='mt-10px'>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                            </p>
-                    </div>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-12 mt-30">
-                    <div class='custom-PrimaryCards '>
-                            <img src="assets/img/eventPic4.png" class='w-100' alt="">
-                            <h1 class='f-24 fw-500 mt-16px'>
-                                Event Title 04
-                            </h1>
-                            <p class='mt-10px'>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                            </p>
-                    </div>
-            </div>
+                }
+            }
+
         </div>
     </div>
 </section>

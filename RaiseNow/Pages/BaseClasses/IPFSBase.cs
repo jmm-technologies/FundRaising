@@ -1,8 +1,8 @@
-﻿using RaiseNow.Models;
-using RaiseNow.Utils;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using RaiseNow.Models;
+using RaiseNow.Utils;
 using System.Text.Json.Nodes;
 namespace RaiseNow.Pages.BaseClasses
 {
@@ -220,7 +220,7 @@ namespace RaiseNow.Pages.BaseClasses
             //catch (Exception e)
             //{
             //    var a = e;
-            //}GetCompaignsByCategoryIndexFuncJS
+            //}
         }
     }
 }
