@@ -45,11 +45,14 @@ function Layout({ activePage, children }) {
     };
 
     const data = useSelector((state) => state.adminAuthSlice);
-    useEffect(() => {
-        if (data.isLoggedIn === false) {
-            navigate('/login');
-        }
-    }, [data.isLoggedIn, navigate]);
+    if (data.isLoggedIn === false){
+        navigate('/login');
+    }
+    // useEffect(() => {
+    //     if (data.isLoggedIn === false) {
+    //         navigate('/login');
+    //     }
+    // }, [data.isLoggedIn, navigate]);
     return (
         <ConfigProvider
             theme={{

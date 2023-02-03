@@ -24,13 +24,11 @@ const createEvent = async (data) => {
 
 const updateEvent = async (data) => {
   const id = data.id;
-  console.log('service')
   const token = localStorage.getItem("admin");
   const config = {
     headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
   const res = await axios.put(API_URL + `/event/${id}`, data, config);
-  console.log(res.data)
   return res.data;
 }
 

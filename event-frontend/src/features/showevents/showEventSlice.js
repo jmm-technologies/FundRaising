@@ -40,7 +40,6 @@ export const updateEvent = createAsyncThunk("event/updateEvent", async (values, 
         id: values?.id
     }
     const response = await EventServices.updateEvent(formdata);
-    console.log(response)
     return response;
 }  
 );

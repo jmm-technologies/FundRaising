@@ -24,16 +24,12 @@ function Login() {
     const onFinishFailed = (errorInfo) => {
         message.error("Failed", errorInfo);
     };
-
-    // check if user is already logged in
     const data = useSelector((state) => state.adminAuthSlice);
     useEffect(() => {
-        document.title = "Login";
-        if (data.isLoggedIn === false) {
-            navigate('/login');
+        if (data.isLoggedIn === true) {
+            navigate("/event");
         }
     }, [data.isLoggedIn, navigate]);
-
     return (
         <div className="container-fluid">
             <div className="row no-gutter">
