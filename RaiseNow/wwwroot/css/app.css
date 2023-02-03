@@ -198,16 +198,22 @@
 .shake-hand
 {
     position: absolute;
-    bottom: 167px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    bottom: 137px;
     left: 35%;
     width: 532px;
-    height: 175px;
+    min-height: 175px;
     background-color: #FED857;
 }
-.shake-hand p
+.shake-hand div:nth-child(2)
 {
-    width: 75%;
-    margin: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 10px;
+    
+    
 }
 
 .custom-PrimaryCards 
