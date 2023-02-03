@@ -9,6 +9,6 @@
         public static string PINATA_API_SECRET { get; private set; } = "41c4cc0b4e2fb88295a77369cd9ba135152fda9fcb93663aa037f8770cb37dab";
         public static string GOERLI_ETHERSCAN { get; private set; } = "https://goerli.etherscan.io/address";
         // TODO: event api end point
-        public static string EVENTS_API { get; private set; } = "http://localhost:4000/api/event";
+        public static string EVENTS_API { get; private set; } = "https://eventapi.infodatics.com/api/event";
     }
 }
