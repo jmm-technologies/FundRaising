@@ -13,6 +13,7 @@ import { FileEntity } from "src/files/entities/file.entity";
 import { UseInterceptors } from "@nestjs/common/decorators";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateEventDto } from "./dto/update.event.dto";
+import { IsUUID } from "class-validator";
 
 
 @ApiTags('Event')
@@ -58,9 +59,9 @@ export class EventController {
     @UseInterceptors(FileInterceptor('file'))
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createEvent: CreateEventDto, @UploadedFile() file: Express.Multer.File) {
-        const { originalname, buffer } = file;
-        const fileName = `${Date.now()}-${originalname}`;
-        const result = await this.aliOssService.put(fileName, buffer);
+        // const { originalname, buffer } = file;
+        const fileName = `${Date.now()}-${file}`;
+        const result = await this.aliOssService.put(fileName, file.buffer);
         // save file to database
         const image = await this.FileRespository.save(
             this.FileRespository.create({
@@ -68,7 +69,6 @@ export class EventController {
                 path: result.url,
             }),
         );
-        console.log(image);
         return await this.EventService.create({
             ...createEvent,
             photoId: image.id,
@@ -84,6 +84,7 @@ export class EventController {
 
 
     @Get(':id')
+    @IsUUID()
     @HttpCode(HttpStatus.OK)
     async findOne(@Param('id') id: string) {
         return await this.EventService.findOne({ id: id });
@@ -96,6 +97,7 @@ export class EventController {
         groups: ['admin'],
     })
     @Patch(':id')
+    @IsUUID()
     @ApiConsumes('multipart/form-data')
     @ApiBody({
         schema: {
