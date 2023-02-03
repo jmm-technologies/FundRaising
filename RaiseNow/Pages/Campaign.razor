@@ -1,4 +1,5 @@
 ﻿@page "/campaign/{campaignaddress}"
+@using System.ComponentModel.DataAnnotations;
 @inherits IPFSBase
 @inject ISnackbar _snackBar
 @inject IMetaMaskService _metaMaskService
@@ -19,6 +20,7 @@
 
     public class RewardClass
     {
+        [Range(0.01,100)]
         public double Amount { get; set; }
     }
     protected override Task OnInitializedAsync()
@@ -134,7 +136,7 @@
         {
             try
             {
-                await DistributeReward(DonateAmount, CampaignAddress);
+                await DistributeReward(_rewardClass.Amount, CampaignAddress);
                 _snackBar.Add($"Transaction Confirmed", Severity.Success);
                 await GetTranactionsByAddress(CampaignAddress).ContinueWith((e) =>
                 {

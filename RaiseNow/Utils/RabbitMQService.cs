@@ -20,6 +20,7 @@ namespace RaiseNow.Utils
                 Password = "password",
                 Port = 5672
             };
+            // TODO: un-commet
             //_connection = factory.CreateConnection();
             //_channel = _connection.CreateModel();
             //_channel.QueueDeclare("email_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
