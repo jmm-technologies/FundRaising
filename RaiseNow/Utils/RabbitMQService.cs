@@ -16,14 +16,21 @@ namespace RaiseNow.Utils
             {
                 //TODO: fix these
                 HostName = "queueservice",
-                UserName = "username",
-                Password = "password",
+                UserName = "guest",
+                Password = "guest",
                 Port = 5672
             };
             // TODO: un-commet
-            //_connection = factory.CreateConnection();
-            //_channel = _connection.CreateModel();
-            //_channel.QueueDeclare("email_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+            try
+            {
+                _connection = factory.CreateConnection();
+                _channel = _connection.CreateModel();
+                _channel.QueueDeclare("email_queue", durable: false, exclusive: false, autoDelete: false, arguments: null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         public class EmailData
         {
