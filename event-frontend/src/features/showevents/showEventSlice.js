@@ -21,7 +21,12 @@ export const fetchEventById = createAsyncThunk("event/showEventById", async (id)
 );
 
 export const createEvent = createAsyncThunk("event/createEvent", async (data) => {
-    const response = await EventServices.createEvent(data);
+    const formdata = {
+        name: data.name,
+        description: data.description,
+        file: data.file.file.originFileObj,
+    }
+    const response = await EventServices.createEvent(formdata);
     return response;
 }
 );
@@ -54,10 +59,64 @@ export const eventSlice = createSlice({
             state.status = "failed";
             state.error = action.error.message;
         },
+        [fetchEventById.pending]: (state, action) => {
+            state.status = "loading";
+        },
+        [fetchEventById.fulfilled]: (state, action) => {
+            state.status = "succeeded";
+            state.event = action.payload;
+        },
+        [fetchEventById.rejected]: (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
+        },
+        [createEvent.pending]: (state, action) => {
+            state.status = "loading";
+        }
+        ,
+        [createEvent.fulfilled]: (state, action) => {
+            state.status = "succeeded";
+            state.event = action.payload;
+        }
+        ,
+        [createEvent.rejected]: (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
+        }
+        ,
+        [updateEvent.pending]: (state, action) => {
+            state.status = "loading";
+        }
+        ,
+        [updateEvent.fulfilled]: (state, action) => {
+            state.status = "succeeded";
+            state.event = action.payload;
+        }
+        ,
+        [updateEvent.rejected]: (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
+        }
+        ,
+        [deleteEvent.pending]: (state, action) => {
+            state.status = "loading";
+        }
+        ,
+        [deleteEvent.fulfilled]: (state, action) => {
+            state.status = "succeeded";
+            state.event = action.payload;
+        }
+        ,
+        [deleteEvent.rejected]: (state, action) => {
+            state.status = "failed";
+            state.error = action.error.message;
+        }
+        ,
+
 
     },
 });
 
-const  { reducer } = eventSlice;
+const { reducer } = eventSlice;
 export default reducer;
 

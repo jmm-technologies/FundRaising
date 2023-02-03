@@ -29,6 +29,7 @@ function Login() {
     // check if user is already logged in
     const data = useSelector((state) => state.adminAuthSlice);
     useEffect(() => {
+        document.title = "Login";
         if (data.isLoggedIn === false) {
             navigate('/login');
         }

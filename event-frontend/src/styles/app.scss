@@ -63,7 +63,14 @@ textarea {
 // }
 
 .ant-upload-wrapper .ant-upload-drag {
-  width: 300px !important;
+  width: 274px !important;
+  height: 400px !important;
+  border-radius: 10px;
+  padding: 0px;
+  margin: 0px;
+}
+.ant-upload {
+  width: 274px !important;
   height: 400px !important;
   border-radius: 10px;
   padding: 0px;

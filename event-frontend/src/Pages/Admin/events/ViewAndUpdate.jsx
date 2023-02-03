@@ -1,26 +1,42 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BackButton from "../../../Components/Common/BackButton";
 import Layout from "../../../Layout/Admin/Layout";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Form, message } from "antd";
 import FormTextInput from "../../../Components/Common/FormTextInput";
 import FormTextAreaInput from "../../../Components/Common/FormTextAreaInput";
-import { useDispatch } from "react-redux";
-import { createEvent } from "../../../features/showevents/showEventSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { createEvent, fetchEventById, updateEvent } from "../../../features/showevents/showEventSlice";
 import UploadFile from "../../../Components/Common/Upload";
 // const { Dragger } = Upload;
 
-function CreateEvent() {
+function ViewAndUpdateEvent() {
+    const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const [eventData, setEventData] = useState({});
+
+    const fetchEvent = useSelector((state) => state.eventSlice.event);
+
 
     const handleFinish = (values) => {
-        dispatch(createEvent(values));
-        message.success("Event created successfully");
+        dispatch(updateEvent({ id, values }));
+        message.success("Event updated successfully");
         navigate("/event");
     };
-
+    useEffect(() => {
+        setEventData({
+            name: fetchEvent.name,
+            description: fetchEvent.description,
+            image: fetchEvent.photoId?.path,
+        });
+        form.setFieldsValue(eventData);
+        dispatch(
+            fetchEventById(id));
+    }, [id, dispatch, fetchEvent.name, fetchEvent.description, fetchEvent.photoId?.path]);
+    console.log("eventData", eventData)
+    // console.log(eventData)
     return (
         <Layout activePage={'events list'}>
             <div className={"card-wrapper"}>
@@ -33,13 +49,16 @@ function CreateEvent() {
                         layout="vertical"
                         onFinish={handleFinish}
                         className=""
+                        initialValues={eventData}
                     >
                         <div className="row m-0 p-0">
 
                             <div className="col-lg-4 col-md-10">
                                 <div className="profileInfo  d-flex gap-3 align-items-center">
 
-                                    <UploadFile />
+                                    <UploadFile
+                                        previewImage={eventData.image}
+                                    />
                                 </div>
                             </div>
                             <div className="col-lg-8 col-md-10">
@@ -47,7 +66,7 @@ function CreateEvent() {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <FormTextInput
-                                            name={"name"}
+                                            name="name"
                                             label={"Blog Name"}
                                             placeholder={"Enter Event title"}
 
@@ -90,7 +109,7 @@ function CreateEvent() {
         </Layout >
     );
 }
-export default CreateEvent;
+export default ViewAndUpdateEvent;
 
 
 

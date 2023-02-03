@@ -5,7 +5,6 @@ import SidebarIcon from '../../assets/images/Icons/sidebaricon.jsx';
 import { Button, ConfigProvider } from "antd";
 import { useSidebar } from '../../Constants/SidebarContext.js';
 import sidebarLogo from '../../assets/images/reisnow2.png';
-import { useAuth } from '../../Constants/AuthContext.js';
 import { useSelector, useDispatch } from "react-redux";
 import { adminLogout, checkUserLoggedIn } from "../../features/auth/adminAuthSlice";
 
@@ -13,13 +12,12 @@ import { adminLogout, checkUserLoggedIn } from "../../features/auth/adminAuthSli
 function Layout({ activePage, children }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { logout } = useAuth();
     const sidebarFun = useSidebar();
     const { width, sidebar, content, updateSidebar } = sidebarFun;
     const pages = [
         {
-            name: 'List of plots',
-            url: '/user/eventlist',
+            name: 'events list',
+            url: '/event',
             icon: <HomeIcon />
         }
     ];
@@ -30,14 +28,7 @@ function Layout({ activePage, children }) {
     useEffect(() => {
         document.title = activePage;
     }, [activePage]);
-    // const { pageTitle = "Dashboard" } = usePage().props;
-    // useEffect(() => {
-    //     document.title = pageTitle;
-    // }, [])
-    // const [sidebar, setSidebar] = useState('sidebar')
-    // const changeSidebarStatus = () => {
-
-    // }
+ 
     useEffect(() => {
         if (width < 1025) {
             updateSidebar('toggled-sidebar', 'toggled-content');
@@ -52,8 +43,6 @@ function Layout({ activePage, children }) {
             updateSidebar('sidebar', 'content');
         }
     };
-
-    // calling adminAuthSlice.isLoggedin
 
     const data = useSelector((state) => state.adminAuthSlice);
     useEffect(() => {
@@ -82,13 +71,8 @@ function Layout({ activePage, children }) {
                         paddingBottom: '34px',
                         marginLeft: '17px',
                     }}>
-                        {/* <p className='f-22 fw-700'> */}
-                        {/* {sidebar  === 'sidebar' ? 'Al Hayat Residencia' : ''} */}
                         {sidebar === 'sidebar' ? <img src={sidebarLogo} alt="sidebarlogo" className='mx-5' width={76} height={65} /> : ''}
                         <Button type="link" onClick={changeSidebarStatus}><SidebarIcon /></Button>
-
-                        {/* </p> */}
-                        {/* <img src={NavSidebarStatusIcon} className='cursor-pointer' onClick={changeSidebarStatus} alt='navStatus' /> */}
                     </div>
                     <p className={"text-secondary"}>Navigation</p>
                     <ul>

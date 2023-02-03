@@ -3,18 +3,15 @@ import DatatableComponent from "../../../Components/Common/DatatableComponent";
 import DeleteButton from "../../../Components/Common/DeleteButton";
 import editicon from "../../../assets/images/Icons/edit-icon.svg";
 import TitleAction from "../../../Components/Common/TitleAction";
-import { Link } from 'react-router-dom';
-import Layout from '../../../Layout/Customer/Layout';
+import { Link, useNavigate } from 'react-router-dom';
+import Layout from '../../../Layout/Admin/Layout';
 import HeaderWithSearchBtn from '../../../Components/Common/HeaderWithSearchBtn';
 import { useSelector, useDispatch } from "react-redux";
 import { fetchEvents } from "../../../features/showevents/showEventSlice";
 
 function ProjectList() {
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(fetchEvents());
-    }, [dispatch]);
+    const navigate = useNavigate();
     const result = useSelector((state) => state.eventSlice);
     const data = result.events;
     const columns = [
@@ -59,8 +56,11 @@ function ProjectList() {
             ),
         }
     ]
+    useEffect(() => {
+        dispatch(fetchEvents());
+    }, [dispatch, navigate]);
     return (
-        <Layout activePage={'List of plots'}>
+        <Layout activePage={'events list'}>
             <div className='card-wrapper p-3 my-4'>
                 <HeaderWithSearchBtn
                     title={'List of plots'}

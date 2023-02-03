@@ -3,40 +3,31 @@ import config from "../../config.json";
 const API_URL = config.apiUrl;
 
 const showEvent = async () => {
-    // pass token in header
-    const token = localStorage.getItem("admin");
-    const config = {
-      headers: { authorization: `Bearer ${token}` },
-    };
-    return axios.get(API_URL + "/event", config).then((res) => {
+    return axios.get(API_URL + "/event").then((res) => {
       return res.data;
     });
   };
 
 const showEventById = async (id) => {
-  const token = localStorage.getItem("admin");
-  const config = {
-    headers: { authorization: `Bearer ${token}` },
-  };
-    const res = await axios.get(API_URL + "api/event/" + id, config);
+    const res = await axios.get(API_URL + `/event/${id}`);
     return res.data;
 }
 
 const createEvent = async (data) => {
   const token = localStorage.getItem("admin");
   const config = {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
-    const res = await axios.post(API_URL + "api/event", data, config);
+    const res = await axios.post(API_URL + "/event", data, config);
     return res.data;
 }
 
 const updateEvent = async (id, data) => {
   const token = localStorage.getItem("admin");
   const config = {
-    headers: { authorization: `Bearer ${token}` },
+    headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
-    const res = await axios.put(API_URL + "api/event/" + id, data, config);
+    const res = await axios.put(API_URL + "/event/" + id, data, config);
     return res.data;
 }
 
