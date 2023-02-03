@@ -11,7 +11,7 @@ function App() {
     <SidebarProvider>
       <div className="App">
         <Routes>
-          <Route path="/login" element={<UserLogin />} />
+          <Route path="/" element={<UserLogin />} />
           <Route path="/event" element={<UserPlotsList />} />
           <Route path="/event/:id" element={<UserPlotDetail />} />
           <Route path="/createevent" element={<CreateEvent />} />
