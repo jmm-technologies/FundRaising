@@ -31,11 +31,20 @@ export const createEvent = createAsyncThunk("event/createEvent", async (data) =>
 }
 );
 
-export const updateEvent = createAsyncThunk("event/updateEvent", async (data) => {
-    const response = await EventServices.updateEvent(data);
+export const updateEvent = createAsyncThunk("event/updateEvent", async (values, id) => {
+
+    const formdata = {
+        name: values?.name,
+        description: values?.description,
+        file: values?.file.file.originFileObj,
+        id: values?.id
+    }
+    const response = await EventServices.updateEvent(formdata);
+    console.log(response)
     return response;
-}
+}  
 );
+
 
 export const deleteEvent = createAsyncThunk("event/deleteEvent", async (id) => {
     const response = await EventServices.deleteEvent(id);

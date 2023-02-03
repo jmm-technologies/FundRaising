@@ -23,7 +23,6 @@ const RequestRejectForm = ({ isModalVisible, handleCancel }) => {
                             form.resetFields();
                         })
                         .catch((info) => {
-                            console.log('Validate Failed:', info);
                         });
                 }} className='primary--btn'>
                   Submit

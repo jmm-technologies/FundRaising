@@ -3,14 +3,14 @@ import config from "../../config.json";
 const API_URL = config.apiUrl;
 
 const showEvent = async () => {
-    return axios.get(API_URL + "/event").then((res) => {
-      return res.data;
-    });
-  };
+  return axios.get(API_URL + "/event").then((res) => {
+    return res.data;
+  });
+};
 
 const showEventById = async (id) => {
-    const res = await axios.get(API_URL + `/event/${id}`);
-    return res.data;
+  const res = await axios.get(API_URL + `/event/${id}`);
+  return res.data;
 }
 
 const createEvent = async (data) => {
@@ -18,38 +18,40 @@ const createEvent = async (data) => {
   const config = {
     headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
-    const res = await axios.post(API_URL + "/event", data, config);
-    return res.data;
+  const res = await axios.post(API_URL + "/event", data, config);
+  return res.data;
 }
 
-const updateEvent = async (id, data) => {
+const updateEvent = async (data) => {
+  const id = data.id;
+  console.log('service')
   const token = localStorage.getItem("admin");
   const config = {
     headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
-    const res = await axios.put(API_URL + "/event/" + id, data, config);
-    return res.data;
+  const res = await axios.put(API_URL + `/event/${id}`, data, config);
+  console.log(res.data)
+  return res.data;
 }
 
+
 const deleteEvent = async (id) => {
-  console.log('id', id)
   const token = localStorage.getItem("admin");
   const config = {
     headers: { authorization: `Bearer ${token}` },
   };
-    const res = await axios.delete(API_URL + "/event/" + id, config);
-    console.log('res', res)
-    return res.data;
+  const res = await axios.delete(API_URL + "/event/" + id, config);
+  return res.data;
 }
 
 
 
 const showEventServices = {
-    showEvent,
-    showEventById,
-    createEvent,
-    updateEvent,
-    deleteEvent
+  showEvent,
+  showEventById,
+  createEvent,
+  updateEvent,
+  deleteEvent
 };
 
 export default showEventServices;

@@ -17,13 +17,20 @@ const customStyles = {
     cells: {
         style: {
             fontSize: "14px",
-            // paddingLeft: "24px",
-            // border: "1px solid #EEEEEE",
-            // borderTop: "none !important",
-            // borderBottom: "none !important",
-            // borderRight: "none !important",
-        },
+            //overflow cell content to show ellipsis
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+             },
     },
+    // column text overflow ellipsis
+     column: {
+        style: {
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+        },
+     }
 };
 
 
@@ -75,8 +82,6 @@ const DatatableComponent = ({
             pagination={pagination}
             customStyles={customStyles}
             keyField="id"
-            //border
-            // striped
             highlightOnHover
             responsive	
             {...paginationConfig}

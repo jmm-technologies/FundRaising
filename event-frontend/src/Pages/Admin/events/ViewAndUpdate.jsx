@@ -6,9 +6,8 @@ import { Button, Form, message } from "antd";
 import FormTextInput from "../../../Components/Common/FormTextInput";
 import FormTextAreaInput from "../../../Components/Common/FormTextAreaInput";
 import { useSelector, useDispatch } from "react-redux";
-import { createEvent, fetchEventById, updateEvent } from "../../../features/showevents/showEventSlice";
+import { fetchEventById, updateEvent } from "../../../features/showevents/showEventSlice";
 import UploadFile from "../../../Components/Common/Upload";
-// const { Dragger } = Upload;
 
 function ViewAndUpdateEvent() {
     const { id } = useParams();
@@ -18,25 +17,22 @@ function ViewAndUpdateEvent() {
     const [eventData, setEventData] = useState({});
 
     const fetchEvent = useSelector((state) => state.eventSlice.event);
-
-
     const handleFinish = (values) => {
-        dispatch(updateEvent({ id, values }));
+        dispatch(updateEvent(values));
         message.success("Event updated successfully");
         navigate("/event");
     };
     useEffect(() => {
+        dispatch(fetchEventById(id));
         setEventData({
             name: fetchEvent.name,
             description: fetchEvent.description,
             image: fetchEvent.photoId?.path,
         });
+    }, [id, dispatch, navigate]);
+    useEffect(() => {
         form.setFieldsValue(eventData);
-        dispatch(
-            fetchEventById(id));
-    }, [id, dispatch, fetchEvent.name, fetchEvent.description, fetchEvent.photoId?.path]);
-    console.log("eventData", eventData)
-    // console.log(eventData)
+    }, [eventData, form]);
     return (
         <Layout activePage={'events list'}>
             <div className={"card-wrapper"}>
@@ -66,7 +62,7 @@ function ViewAndUpdateEvent() {
                                 <div className="row">
                                     <div className="col-md-6">
                                         <FormTextInput
-                                            name="name"
+                                            name={"name"}
                                             label={"Blog Name"}
                                             placeholder={"Enter Event title"}
 

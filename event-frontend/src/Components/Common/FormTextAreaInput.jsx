@@ -6,7 +6,6 @@ const { TextArea } = Input;
 function FormTextAreaInput({ name = "", label = "", placeholder = "", rows = "",
     isArabicRule = false, description,
 }) {
-    console.log('description', description);
     return (
         <Form.Item
             label={label}

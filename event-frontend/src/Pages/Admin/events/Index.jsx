@@ -18,14 +18,18 @@ function ProjectList() {
         {
             name: 'Blog name',
             width: "20%",
-            selector: (row) => row.name,
+            // selector: (row) => row.name,   
+            selector: (row) => row.name.length > 20 ? row.name.slice(0, 20) + '...' : row.name
         },
         {
             name: 'Description',
+            width: "50%",
             selector: (row) =>
                 <Link
                     to={`/event/${row.id}`}                >
-                    {row.description}
+                    {
+                    row.description.length > 50 ? row.description.slice(0, 50) + '...' : row.description
+                    }
                 </Link>,
 
         },

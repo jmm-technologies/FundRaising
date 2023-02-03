@@ -12,7 +12,6 @@ function Login() {
 
 
     const onFinish = (values) => {
-        console.log("Success:", values);
         dispatch(adminLogin(values)).then((res) => {
             if (res.payload.token) {
                 message.success("Login Successfully");

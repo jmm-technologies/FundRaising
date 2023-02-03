@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Upload } from "antd";
 
-const UploadFile = ({ previewImage,
+const UploadFile = ({ previewImage = "",
     isDisabled = false
 }) => {
-    const [uploadPreview, setUploadPreview] = React.useState(previewImage);
-    console.log('ssss', uploadPreview);
+    const [uploadPreview, setUploadPreview] = useState(previewImage);
+
+    useEffect(() => {
+        setUploadPreview(previewImage);
+    }, [previewImage]);
     return (
         <>
             <Form.Item
@@ -20,9 +23,7 @@ const UploadFile = ({ previewImage,
                     beforeUpload={false}
                     showUploadList={false}
                     onChange={({ file }) => {
-                        console.log('sas', file);
                         setUploadPreview(URL.createObjectURL(file.originFileObj))
-                        console.log('upload', uploadPreview);
                     }}
                 >
                     {uploadPreview ? (
