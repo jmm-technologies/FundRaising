@@ -26,7 +26,7 @@ function ProjectList() {
             width: "50%",
             selector: (row) =>
                 <Link
-                    to={`/event/${row.id}`}                >
+                    to={`/event/${row.id}`}>
                     {
                     row.description.length > 50 ? row.description.slice(0, 50) + '...' : row.description
                     }

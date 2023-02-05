@@ -49,8 +49,15 @@ export const adminAuthSlice = createSlice({
   reducers: {},
   extraReducers: {
     [adminLogin.fulfilled]: (state, action) => {
-      state.isLoggedIn = true;
+      // check adminLogin is success or not
+      if (action.payload !== "Invalid email or password") {
+        state.isLoggedIn = true;
       state.admin = action.payload;
+      }
+      else {
+        state.isLoggedIn = false;
+        state.admin = null;
+      }
     },
     [adminLogout.fulfilled]: (state, action) => {
       state.isLoggedIn = false;

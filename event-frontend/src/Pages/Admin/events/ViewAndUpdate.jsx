@@ -29,7 +29,7 @@ function ViewAndUpdateEvent() {
             description: fetchEvent.description,
             image: fetchEvent.photoId?.path,
         });
-    }, [id, dispatch, navigate]);
+    }, [id, dispatch, navigate, fetchEvent.name, fetchEvent.description, fetchEvent.photoId?.path]);
     useEffect(() => {
         form.setFieldsValue(eventData);
     }, [eventData, form]);

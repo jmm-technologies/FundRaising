@@ -6,7 +6,7 @@ import { Button, ConfigProvider } from "antd";
 import { useSidebar } from '../../Constants/SidebarContext.js';
 import sidebarLogo from '../../assets/images/reisnow2.png';
 import { useSelector, useDispatch } from "react-redux";
-import { adminLogout, checkUserLoggedIn } from "../../features/auth/adminAuthSlice";
+import { adminLogout } from "../../features/auth/adminAuthSlice";
 
 
 function Layout({ activePage, children }) {
@@ -35,7 +35,7 @@ function Layout({ activePage, children }) {
         } else {
             updateSidebar('sidebar', 'content');
         }
-    }, [width]);
+    }, [updateSidebar, width]);
     const changeSidebarStatus = () => {
         if (sidebar === 'sidebar') {
             updateSidebar('toggled-sidebar', 'toggled-content');
@@ -45,14 +45,11 @@ function Layout({ activePage, children }) {
     };
 
     const data = useSelector((state) => state.adminAuthSlice);
+   useEffect(() => {
     if (data.isLoggedIn === false){
         navigate('/login');
     }
-    // useEffect(() => {
-    //     if (data.isLoggedIn === false) {
-    //         navigate('/login');
-    //     }
-    // }, [data.isLoggedIn, navigate]);
+    }, [data.isLoggedIn, navigate]);
     return (
         <ConfigProvider
             theme={{
@@ -63,11 +60,8 @@ function Layout({ activePage, children }) {
                     colorPrimary: "#03B664",
                 },
             }}
-        // direction={language === 'ar' ? 'rtl' : 'ltr'}
-
         >
             <div className={"layout"}
-            // dir={language === 'ar' ? 'rtl' : 'ltr'}
             >
                 <div className={sidebar}>
                     <div className={"f-18 fw-700 d-flex justify-content-end text-white sidebar-style"} style={{

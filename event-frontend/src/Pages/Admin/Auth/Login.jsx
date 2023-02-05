@@ -26,9 +26,9 @@ function Login() {
     };
     const data = useSelector((state) => state.adminAuthSlice);
     useEffect(() => {
-        if (data.isLoggedIn === true) {
-            navigate("/event");
-        }
+    if (data.isLoggedIn === true){
+        navigate('/event');
+    }
     }, [data.isLoggedIn, navigate]);
     return (
         <div className="container-fluid">
