@@ -14,7 +14,7 @@ const showEventById = async (id) => {
 }
 
 const createEvent = async (data) => {
-  const token = localStorage.getItem("admin");
+  const token = localStorage.getItem("admin").replace(/['"]+/g, "");
   const config = {
     headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
@@ -22,19 +22,18 @@ const createEvent = async (data) => {
   return res.data;
 }
 
-const updateEvent = async (data) => {
-  const id = data.id;
-  const token = localStorage.getItem("admin");
+const updateEvent = async (data, id) => {
+  const token = localStorage.getItem("admin").replace(/['"]+/g, "");
   const config = {
     headers: { authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
   };
-  const res = await axios.put(API_URL + `/event/${id}`, data, config);
+  const res = await axios.patch(API_URL + `/event/${id}`, data, config);
   return res.data;
 }
 
 
 const deleteEvent = async (id) => {
-  const token = localStorage.getItem("admin");
+  const token = localStorage.getItem("admin").replace(/['"]+/g, "");
   const config = {
     headers: { authorization: `Bearer ${token}` },
   };

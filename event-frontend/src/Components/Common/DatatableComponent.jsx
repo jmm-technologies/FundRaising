@@ -1,36 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DataTable from "react-data-table-component";
-// import { useLanguage } from "../../Constants/LanguageContext";
-// import SystemNameCheck from '.././Constants/SystemNameCheck';
+import { useDispatch } from "react-redux";
+import { fetchEvents } from "../../features/showevents/showEventSlice";
 const customStyles = {
     headCells: {
         style: {
             color: "#686874",
             fontSize: "14px",
-            // paddingLeft: "24px",
-            // border: "1px solid #EEEEEE",
-            // borderBottom: "none !important",
-            // borderRight: "none !important",
         },
     },
 
     cells: {
         style: {
             fontSize: "14px",
-            //overflow cell content to show ellipsis
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
-             },
+        },
     },
-    // column text overflow ellipsis
-     column: {
+    column: {
         style: {
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
         },
-     }
+    }
 };
 
 
@@ -40,57 +34,31 @@ const DatatableComponent = ({
     pagination = true,
     ...rest
 }) => {
-    // let { total, currentPage, perPage } = usePage().props;
+    const dispatch = useDispatch();
     let paginationConfig = {};
-    // const changeLanguage = useLanguage();
-    // const { language, t } = changeLanguage;
-    // const fetchData = (page, newPerPage) => {
-    //     Inertia.get(
-    //         "",
-    //         {
-    //             page: page ?? currentPage,
-    //             perPage: newPerPage ?? perPage,
-    //         },
-    //         {
-    //             preserveState: true,
-    //         }
-    //     );
-    // };
-    const handlePageChange = (page) => {
-        // fetchData(page);
-    };
-    const handlePerRowsChange = async (newPerPage, page) => {
-        // fetchData(page, newPerPage);
-    };
-    // if (total && currentPage && perPage) {
-    //     paginationConfig = {
-    //         paginationServer: true,
-    //         paginationTotalRows: total,
-    //         onChangeRowsPerPage: handlePerRowsChange,
-    //         onChangePage: handlePageChange,
-    //         paginationDefaultPage: Number(currentPage),
-    //         paginationPerPage: Number(perPage),
-    //     };
-    // }
 
 
-    return (
-        <DataTable
-            columns={columns}
-            persistTableHead={true}
-            data={data}
-            pagination={pagination}
-            customStyles={customStyles}
-            keyField="id"
-            highlightOnHover
-            responsive	
-            {...paginationConfig}
-            {...rest}
-            noDataComponent={
-                <div className="mt-5">no-records</div>
-            }
 
-        />
-    );
+    useEffect(() => {
+        dispatch(fetchEvents());
+    }, [dispatch, data]);
+return (
+    <DataTable
+        columns={columns}
+        persistTableHead={true}
+        data={data}
+        pagination={pagination}
+        customStyles={customStyles}
+        keyField="id"
+        highlightOnHover
+        responsive
+        {...paginationConfig}
+        {...rest}
+        noDataComponent={
+            <div className="mt-5">no-records</div>
+        }
+
+    />
+);
 };
 export default DatatableComponent;

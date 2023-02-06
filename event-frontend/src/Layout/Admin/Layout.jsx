@@ -7,6 +7,7 @@ import { useSidebar } from '../../Constants/SidebarContext.js';
 import sidebarLogo from '../../assets/images/reisnow2.png';
 import { useSelector, useDispatch } from "react-redux";
 import { adminLogout } from "../../features/auth/adminAuthSlice";
+import signOutIcon from '../../assets/images/Icons/sign-out.svg';
 
 
 function Layout({ activePage, children }) {
@@ -76,25 +77,25 @@ function Layout({ activePage, children }) {
                         {
                             pages.map((page, index) => {
                                 return (
-                                    // <li key={index} className={`${activePage.toLowerCase() === page.name.toLowerCase() ? 'active' : ''}`}>
                                     <li key={index} className={`${activePage === page.name ? 'active' : ''}`}>
-                                        {/* {page.icon} <Link to={page.url}>{page.name}</Link>
-                                         */}
                                         {sidebar === 'sidebar' ? <Link to={page.url}>{page.icon}<span className='px-3'>{page.name}</span></Link> : <Link to={page.url}>{page.icon}</Link>}
                                     </li>
                                 )
                             })
                         }
                     </ul>
-                    {/* <div className='logout-btn-dev'> */}
+                    {
+                        sidebar === 'sidebar' ? 
                     <Button
                         htmlType="submit"
                         className="btn-height custom-lg-btn btn-cancel logout-btn"
                         onClick={logOut}
                     >
+                        <img src={signOutIcon} alt="logout" className='mr-2 mx-2' width={15} height={15} />
                         {"Logout"}
                     </Button>
-                    {/* </div> */}
+                    : ''
+                    }
                 </div>
                 <div className={content}>
                     <div className={"layout__header"}>

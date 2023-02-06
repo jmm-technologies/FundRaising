@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Button, message, Modal } from "antd";
-import RemoveCircleIcon from "../../assets/images/Icons/delete-icon.svg";
+import RemoveCircleIcon from "../../assets/images/Icons/remove-circle.svg";
 import RemoveCircleIconWhite from "../../assets/images/Icons/Delete_icon_white.svg";
 import dangerIcon from "../../assets/images/Icons/danger.png";
 import { deleteEvent } from "../../features/showevents/showEventSlice";

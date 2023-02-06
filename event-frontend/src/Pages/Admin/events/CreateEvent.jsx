@@ -77,7 +77,7 @@ function CreateEvent() {
                                         type="primary"
                                         className="primary--btn btn-height custom-lg-btn"
                                     >
-                                        {"Save changes"}
+                                        {"Add Blog"}
                                     </Button>
                                 </div>
 

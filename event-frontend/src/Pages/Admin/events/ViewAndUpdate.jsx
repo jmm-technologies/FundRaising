@@ -18,7 +18,7 @@ function ViewAndUpdateEvent() {
 
     const fetchEvent = useSelector((state) => state.eventSlice.event);
     const handleFinish = (values) => {
-        dispatch(updateEvent(values));
+        dispatch(updateEvent({ ...values, id }));
         message.success("Event updated successfully");
         navigate("/event");
     };
@@ -92,7 +92,7 @@ function ViewAndUpdateEvent() {
                                         type="primary"
                                         className="primary--btn btn-height custom-lg-btn"
                                     >
-                                        {"Save changes"}
+                                        {"Update"}
                                     </Button>
                                 </div>
 

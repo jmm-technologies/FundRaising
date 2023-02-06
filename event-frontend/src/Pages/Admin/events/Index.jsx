@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import DatatableComponent from "../../../Components/Common/DatatableComponent";
 import DeleteButton from "../../../Components/Common/DeleteButton";
-import editicon from "../../../assets/images/Icons/edit-icon.svg";
+import editicon from "../../../assets/images/Icons/editicon.svg";
 import TitleAction from "../../../Components/Common/TitleAction";
 import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../../../Layout/Admin/Layout';

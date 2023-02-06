@@ -3,7 +3,6 @@ import config from "../../config.json";
 const API_URL = config.apiUrl;
 //@desc admin login service and set admin in local storage
 const adminLogin = async (email, password) => {
-  console.log(email, password)
   const res = await axios
     .post(API_URL + "/auth/admin/login", {
       email: email,

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import EventServices from "./showEventSrervice";
+import { useSelector } from "react-redux";
 
 const initialState = {
     events: [],
@@ -31,15 +32,14 @@ export const createEvent = createAsyncThunk("event/createEvent", async (data) =>
 }
 );
 
-export const updateEvent = createAsyncThunk("event/updateEvent", async (values, id) => {
-
+export const updateEvent = createAsyncThunk("event/updateEvent", async (values) => {
     const formdata = {
         name: values?.name,
         description: values?.description,
         file: values?.file.file.originFileObj,
-        id: values?.id
     }
-    const response = await EventServices.updateEvent(formdata);
+    const id = values?.id;
+    const response = await EventServices.updateEvent(formdata, id);
     return response;
 }  
 );
