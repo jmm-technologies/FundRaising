@@ -9,7 +9,7 @@ export class FilesService {
     private readonly aliOssService: AliOssService,
     private readonly FileRespository: Repository<FileEntity>,
   ) { }
-
+// upload file to ali oss
   async uploadFile(file: any) {
     const result = await this.aliOssService.put(file.originalname, file.buffer);
     // save file to database
